@@ -10,36 +10,41 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useLoginMutation } from "./services";
+import { Copyright } from './components/Copyright';
+import { mappedResponse } from './utils/mappedResponse';
+import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../store';
+import { login as doLogin } from './slice/authentication'
 
-function Copyright(props: any) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
-// TODO remove, this demo shouldn't need to reset the theme.
-const defaultTheme = createTheme();
 
 export const AuthApp = () => {
+
+  const dispatch = useAppDispatch();
+
+  const [login] = useLoginMutation();
+  const navigate = useNavigate();
+  
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
+    
+    const body = {
       email: data.get('email'),
       password: data.get('password'),
+    };
+
+    login(body).unwrap().then((res) => {
+      const { user } = mappedResponse(res);
+      dispatch(doLogin(user));
+      navigate('/backoffice/dashboard');
+    }).catch((err) => {
+      console.log(err);
     });
+
   };
 
   return (
-    <ThemeProvider theme={defaultTheme}>
       <Grid container component="main" sx={{ height: '100vh' }}>
         <CssBaseline />
         <Grid
@@ -117,11 +122,10 @@ export const AuthApp = () => {
                   </Link>
                 </Grid>
               </Grid>
-              <Copyright sx={{ mt: 5 }} />
+              <Copyright />
             </Box>
           </Box>
         </Grid>
       </Grid>
-    </ThemeProvider>
   );
 }
