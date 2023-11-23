@@ -39,7 +39,10 @@ export const authenticationSlice = createSlice({
       localStorage.setItem('user', JSON.stringify(action.payload));
     },
     logout: (state) => {
-        state = initialState; 
+        localStorage.removeItem('user');
+        state.isLogged = false;
+        state.user = null;
+        state.token = "";
     }
   },
 });

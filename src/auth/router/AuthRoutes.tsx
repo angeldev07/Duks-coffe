@@ -6,11 +6,11 @@ export const AuthRoutes = () => {
   const user = useAppSelector((state) => state.authentication.user);
 
   if (user) 
-    return <Navigate to="/backoffice/dashboard" />;
+    return <Navigate to="/backoffice/products" />;
   
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="sign-in" />} />
+      <Route path="*" element={<Navigate to="sign-in" />} />
       <Route path="sign-in" element={<AuthApp />} />
     </Routes>
   );

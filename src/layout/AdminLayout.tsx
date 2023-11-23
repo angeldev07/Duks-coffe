@@ -1,12 +1,17 @@
-import { AppBar, Box, Toolbar } from "@mui/material";
-import { useState } from "react";
-import { Outlet } from "react-router-dom";
-import { Navbar } from "./components/Navbar";
-import { Sidebar } from "./components/Sidebar";
+import {AppBar, Box, Toolbar} from "@mui/material";
+import {useState} from "react";
+import {Navigate, Outlet} from "react-router-dom";
+import {Navbar} from "./components/Navbar";
+import {Sidebar} from "./components/Sidebar";
+import {useAppSelector} from "../store";
 
 export const AdminLayout = () => {
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(true);
+  const user = useAppSelector(state =>  state.authentication.user)
+
+    if (!user)
+        return <Navigate to="/auth" />;
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -37,6 +42,7 @@ export const AdminLayout = () => {
             anchorElUser={anchorElUser}
             handleCloseUserMenu={handleCloseUserMenu}
             handleOpenSidebar={handleDrawerToggle}
+            user={user!}
           />
         </Toolbar>
       </AppBar>
@@ -45,10 +51,10 @@ export const AdminLayout = () => {
       <Sidebar
         drawerOpen={mobileOpen}
         drawerToggle={handleDrawerToggle}
-        window={undefined}
+        user={user!}
       />
 
-      <Box component="main" flexGrow={1} p={2}  sx={{ transform: { md : mobileOpen ? 'translateX(268px)' :  ' translateX(0)', transition: 'transform 0.3s ease-in-out', width: 'calc(100% - 268px)'} }}>
+      <Box component="main" flexGrow={1} p={2}  sx={{ marginLeft: { md : mobileOpen ? '268px' :  ' 0', transition: 'margin 0.2s ease-in-out', width: 'calc(100% - 268px)'} }}>
         <Outlet />
       </Box>
     </Box>
