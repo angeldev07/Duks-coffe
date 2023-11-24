@@ -21,10 +21,10 @@ export const cardsInfo: CardInfo[] = [
         subtitle: 'Cantidad total',
         value: 0
     },
-    {
-        icon : <GroupAddIcon />,
-        title: 'Media de edad',
-        subtitle: 'Todo el tiempo',
-        value: 0
-    },
+    // {
+    //     icon : <GroupAddIcon />,
+    //     title: 'Media de edad',
+    //     subtitle: 'Todo el tiempo',
+    //     value: 0
+    // },
 ]
