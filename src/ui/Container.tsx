@@ -26,7 +26,7 @@ export const Container = ({ title, children, colorBorder }: Props) => {
             padding: ".5rem 1rem",
         }}
       >
-        <Typography variant="h4" component="h2">
+        <Typography variant="h4" >
           {title}
         </Typography>
       </Box>

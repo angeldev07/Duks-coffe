@@ -1,14 +1,12 @@
 import { Box, Button, Typography } from "@mui/material";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import { PageHeader, Container } from "../ui";
-import { cardsInfo } from "./const";
 import { InfoCard } from "./components/InfoCard";
 import ClientList from "./pages/ClientList";
 import { useClients } from "./hooks/clients";
 export const ClientsPage = () => {
+  const { clients, isLoading, stats ,handleClientInfoView } = useClients();
 
-  const { clients, isLoading, handleClientInfoView} = useClients()
- 
   return (
     <div>
       <PageHeader>
@@ -40,7 +38,7 @@ export const ClientsPage = () => {
           marginTop: "1rem",
         }}
       >
-        {cardsInfo.map((item, index) => (
+        {stats.map((item, index) => (
           <InfoCard key={index} item={item} />
         ))}
       </Box>
@@ -49,7 +47,12 @@ export const ClientsPage = () => {
       <Container title="Lista de clientes" colorBorder="#000">
         <>
           {isLoading && <div>Loading...</div>}
-          {clients  && <ClientList data={clients} hanldeClientInfoView={handleClientInfoView} />}
+          {clients && (
+            <ClientList
+              data={clients}
+              hanldeClientInfoView={handleClientInfoView}
+            />
+          )}
         </>
       </Container>
     </div>
