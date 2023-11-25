@@ -1,7 +1,7 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { useGetAllClientsQuery } from "../services";
-import { setClients, setSelectedClient } from "../slice/clients";
+import { setClients, setSelectedClient, deleteClient } from "../slice/clients";
 import { Client } from "../interfaces/clients";
 import { useNavigate } from "react-router-dom";
 import { cardsInfo } from "../const";
@@ -10,12 +10,28 @@ export const useClients = () => {
     const {clients} = useAppSelector((state) => state.clients);
     const dispatch = useAppDispatch();
     const navigate = useNavigate(); 
+    const [open, setOpen] = useState(false);
   
     const { data, isLoading } = useGetAllClientsQuery();
 
     const handleClientInfoView = (client: Client) => { 
         dispatch(setSelectedClient(client));
         navigate(`/backoffice/clients/${client.id}`);
+    }
+
+    const handleOpenModalDeteClientConfirm = (client: Client) => { 
+        setOpen(true);
+        dispatch(setSelectedClient(client));
+    }
+
+    const handleCancelDeleteClient = () => { 
+        setOpen(false);
+        dispatch(setSelectedClient(null));
+    }
+
+    const handleDeleteClient = () => {
+      dispatch(deleteClient());
+      setOpen(false);
     }
 
     const stats = useMemo(() => {
@@ -45,7 +61,11 @@ export const useClients = () => {
         clients,
         isLoading,
         stats,
-        handleClientInfoView
+        open,
+        handleClientInfoView,
+        handleOpenModalDeteClientConfirm,
+        handleDeleteClient,
+        handleCancelDeleteClient
     }
 
 }

@@ -1,11 +1,20 @@
 import { Box, Button, Typography } from "@mui/material";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
-import { PageHeader, Container } from "../ui";
+import { PageHeader, Container, AlertDialog as Modal } from "../ui";
 import { InfoCard } from "./components/InfoCard";
 import ClientList from "./pages/ClientList";
 import { useClients } from "./hooks/clients";
 export const ClientsPage = () => {
-  const { clients, isLoading, stats ,handleClientInfoView } = useClients();
+  const {
+    clients,
+    isLoading,
+    stats,
+    open,
+    handleClientInfoView,
+    handleOpenModalDeteClientConfirm,
+    handleCancelDeleteClient,
+    handleDeleteClient,
+  } = useClients();
 
   return (
     <div>
@@ -47,14 +56,30 @@ export const ClientsPage = () => {
       <Container title="Lista de clientes" colorBorder="#000">
         <>
           {isLoading && <div>Loading...</div>}
-          {clients && (
+          {clients && clients.length > 0 && (
             <ClientList
               data={clients}
               hanldeClientInfoView={handleClientInfoView}
+              handleClientDelete={handleOpenModalDeteClientConfirm}
             />
+          )}
+          {clients && clients.length === 0 && (
+            <Typography variant="body1" align="center" sx={{padding: '1rem'}}>
+              No se encontraron clientes
+            </Typography>
           )}
         </>
       </Container>
+      <Modal
+        open={open}
+        data={{
+          title: "Eliminar usuario",
+          content:
+            "Estas seguro de que quieres eliminar al usuario seleccionado",
+        }}
+        handleAccept={handleDeleteClient}
+        handleClose={handleCancelDeleteClient}
+      />
     </div>
   );
 };
