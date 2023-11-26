@@ -36,6 +36,7 @@ export const clientsSlice = createSlice({
       state.clients = state.clients?.filter(
         (client) => client.id !== state.selectedClient?.id
       );
+      state.selectedClient = null;
     }
   },
 });

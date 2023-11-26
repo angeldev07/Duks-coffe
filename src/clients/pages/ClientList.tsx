@@ -19,7 +19,7 @@ interface Props {
   handleClientDelete?: (client: Client) => void;
 }
 
-export default function BasicTable({ data, hanldeClientInfoView, handleClientDelete}: Props) {
+export default function BasicTable({ data, hanldeClientInfoView, handleClientDelete, handleClientEdit}: Props) {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [page, setPage] = useState(0);
 
@@ -71,7 +71,7 @@ export default function BasicTable({ data, hanldeClientInfoView, handleClientDel
                   <IconButton onClick={() => hanldeClientInfoView(client)}>
                     <VisibilityIcon color="success" />
                   </IconButton>
-                  <IconButton>
+                  <IconButton onClick={() => handleClientEdit(client)}>
                     <EditIcon color="success" />
                   </IconButton>
                   <IconButton onClick={() => handleClientDelete(client)}>

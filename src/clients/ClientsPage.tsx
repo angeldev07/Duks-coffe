@@ -14,6 +14,7 @@ export const ClientsPage = () => {
     handleOpenModalDeteClientConfirm,
     handleCancelDeleteClient,
     handleDeleteClient,
+    handleEditClient,
   } = useClients();
 
   return (
@@ -61,6 +62,7 @@ export const ClientsPage = () => {
               data={clients}
               hanldeClientInfoView={handleClientInfoView}
               handleClientDelete={handleOpenModalDeteClientConfirm}
+              handleClientEdit={handleEditClient}
             />
           )}
           {clients && clients.length === 0 && (

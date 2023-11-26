@@ -1,16 +1,18 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store";
-import { useGetAllClientsQuery } from "../services";
+import { useGetAllClientsQuery, useDeleteClientMutation } from "../services";
 import { setClients, setSelectedClient, deleteClient } from "../slice/clients";
 import { Client } from "../interfaces/clients";
 import { useNavigate } from "react-router-dom";
 import { cardsInfo } from "../const";
+
 export const useClients = () => { 
 
-    const {clients} = useAppSelector((state) => state.clients);
+    const {clients, selectedClient} = useAppSelector((state) => state.clients);
     const dispatch = useAppDispatch();
     const navigate = useNavigate(); 
     const [open, setOpen] = useState(false);
+    const [deleteMutation] = useDeleteClientMutation();
   
     const { data, isLoading } = useGetAllClientsQuery();
 
@@ -29,8 +31,16 @@ export const useClients = () => {
         dispatch(setSelectedClient(null));
     }
 
+    const handleEditClient = (client: Client) => {
+      dispatch(setSelectedClient(client));
+      navigate(`/backoffice/clients/${client.id}/edit`);
+    }
+
     const handleDeleteClient = () => {
       dispatch(deleteClient());
+      deleteMutation(selectedClient?.id).unwrap().then((res) => {
+        console.log(res); 
+      });
       setOpen(false);
     }
 
@@ -65,7 +75,8 @@ export const useClients = () => {
         handleClientInfoView,
         handleOpenModalDeteClientConfirm,
         handleDeleteClient,
-        handleCancelDeleteClient
+        handleCancelDeleteClient,
+        handleEditClient
     }
 
 }
