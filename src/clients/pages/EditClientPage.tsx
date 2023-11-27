@@ -1,19 +1,49 @@
 import { Box, Typography } from "@mui/material";
 import { Container, PageHeader } from "../../ui";
 import { useAppSelector } from "../../store";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import ClientForm from "../components/ClientForm";
+import { useUpdateClientMutation } from '../services'
+import { Client } from "../interfaces/clients";
 
 export const EditClientPage = () => {
   const client = useAppSelector((state) => state.clients.selectedClient);
-
+  const [updateClient] = useUpdateClientMutation()
+  const navigate = useNavigate();
   if (!client) {
     return <Navigate to={"/backoffice/clients"} replace={true} />;
   }
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => { 
     e.preventDefault();
-    console.log(Object.fromEntries(new FormData(e.currentTarget)));
+    const formData = new FormData(e.currentTarget)
+    console.log(Object.fromEntries(formData));
+    
+
+    if(!formData.get('active'))
+      formData.append('active', 'false')
+
+    const clientUpdate: Client = {
+      id: client.id,
+      name: formData.get('name') as string,
+      lastName: formData.get('lastName') as string,
+      email: formData.get('email') as string,
+      gender: formData.get('gender') as string,
+      address: formData.get('address') as string,
+      phone: formData.get('phone') as string,
+      active: formData.get('active') === 'true' ? true : false,
+      birthDay: client.birthDay,
+      cardId: client.cardId,
+      lastVisit: client.lastVisit,
+    }
+
+
+    updateClient(clientUpdate).unwrap().then( ()  => {
+      navigate("/backoffice/clients", { replace: true });
+    }).catch( err => {
+      console.log(err)
+    })
+
   }
 
   return (

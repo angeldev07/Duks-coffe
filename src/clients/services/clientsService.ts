@@ -29,7 +29,7 @@ export const clientsApi = createApi({
       invalidatesTags: ["Client"],
     }),
     updateClient: builder.mutation({
-      query: (body: Client) => ({
+      query: (body) => ({
         url: `clients/update/${body.id}`,
         method: "PUT",
         body,
