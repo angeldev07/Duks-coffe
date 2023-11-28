@@ -18,13 +18,15 @@ import CategoryList from "./components/CategoryList";
 import { useAppDispatch, useAppSelector } from "../store";
 import { Category } from "./interface";
 import { useModal } from "./hooks/useModal";
+import { CategoryViewInfo } from "./components/CategoryViewInfo";
 
 export const CategoryPage = () => {
-  const { categories } = useAppSelector((state) => state.categories);
-  const dispatch = useAppDispatch();
-  const [select, setSelect] = useState("");
+  const { categories, selectedCategory } = useAppSelector((state) => state.categories);
   const { data, isLoading } = useGetAllCategoryQuery();
   const { open, handleOpenModal, handleClose, handleAccept } = useModal();
+  const categoryView = useModal();
+  const dispatch = useAppDispatch();
+  const [select, setSelect] = useState("");
 
   useEffect(() => {
     if (data) {
@@ -89,6 +91,14 @@ export const CategoryPage = () => {
                 })
               )
             }
+            handleCategoryInfoView={(category: Category) =>
+              categoryView.handleOpenModal(() =>
+                dispatch({
+                  type: "categories/setSelectedCategory",
+                  payload: category,
+                })
+              )
+            }
           />
         )}
       </Container>
@@ -109,7 +119,13 @@ export const CategoryPage = () => {
             dispatch({ type: "categories/setSelectedCategory", payload: null })
           )
         }
-      ></Modal>
+      />
+      <Modal
+        open={categoryView.open}
+        handleClose={() => categoryView.handleClose()}
+        data={{ title: "Ver categoria", component: <CategoryViewInfo category={ {...selectedCategory!}  } /> }}
+        handleAccept={() => categoryView.handleClose()}
+      />
     </>
   );
 };
