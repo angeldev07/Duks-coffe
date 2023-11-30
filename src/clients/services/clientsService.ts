@@ -15,7 +15,7 @@ export const clientsApi = createApi({
     }),
     addClient: builder.mutation({
       query: (body: Client) => ({
-        url: "clients",
+        url: "clients/create",
         method: "POST",
         body,
       }),

@@ -16,6 +16,8 @@ import { mappedResponse } from './utils/mappedResponse';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../store';
 import { login as doLogin } from './slice/authentication'
+import BackgroundLogin from '../assets/BackgroundLogin.jpg';
+import Logo from '../assets/Logo.jpeg';
 
 
 export const AuthApp = () => {
@@ -53,7 +55,7 @@ export const AuthApp = () => {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: 'url(https://source.unsplash.com/random?wallpapers)',
+            backgroundImage: `url(${BackgroundLogin})`,
             backgroundRepeat: 'no-repeat',
             backgroundColor: (t) =>
               t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
@@ -71,7 +73,7 @@ export const AuthApp = () => {
               alignItems: 'center',
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            <Avatar sx={{ m: 1, bgcolor: 'secondary.main', width: 150, height: 150 }} src={Logo} >
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">

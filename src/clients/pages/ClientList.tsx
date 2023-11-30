@@ -15,11 +15,12 @@ import { Client } from "../interfaces/clients";
 interface Props {
   data: Client[];
   hanldeClientInfoView: (client: Client) => void; 
+  handleClientAdd?: (client: Client) => void;
   handleClientEdit?: (client: Client) => void;
   handleClientDelete?: (client: Client) => void;
 }
 
-export default function BasicTable({ data, hanldeClientInfoView, handleClientDelete, handleClientEdit}: Props) {
+export default function BasicTable({ data, hanldeClientInfoView, handleClientAdd, handleClientDelete, handleClientEdit}: Props) {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [page, setPage] = useState(0);
 

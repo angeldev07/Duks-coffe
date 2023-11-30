@@ -17,9 +17,10 @@ import { useState } from "react";
 interface Props {
   client: Client;
   submit: (e: React.FormEvent<HTMLFormElement>) => void;
+  isEditing: boolean;
 }
 
-export default function ClientForm({ client, submit }: Props) {
+export default function ClientForm({ client, submit, isEditing }: Props) {
   const [gender, setGender] = useState(client.gender || "");
 
   const handleGenderChange = (event: SelectChangeEvent<string>) => {
@@ -46,6 +47,15 @@ export default function ClientForm({ client, submit }: Props) {
             name="lastName"
             fullWidth
             defaultValue={client.lastName}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            label="DNI"
+            name="cardId"
+            fullWidth
+            disabled={isEditing}
+            defaultValue={client.cardId}
           />
         </Grid>
         <Grid item xs={12}>
