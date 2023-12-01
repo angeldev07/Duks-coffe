@@ -13,7 +13,7 @@ import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import { Container, PageHeader } from "../ui";
 import { actions } from "./const/actions";
 import { useEffect, useState } from "react";
-import { useGetAllCategoryQuery } from "./service";
+import { useDeleteCategoryMutation, useGetAllCategoryQuery } from "./service";
 import CategoryList from "./components/CategoryList";
 import { useAppDispatch, useAppSelector } from "../store";
 import { Category } from "./interface";
@@ -21,10 +21,14 @@ import { useModal } from "./hooks/useModal";
 import { CategoryViewInfo } from "./components/CategoryViewInfo";
 
 export const CategoryPage = () => {
-  const { categories, selectedCategory } = useAppSelector((state) => state.categories);
+  const { categories, selectedCategory } = useAppSelector(
+    (state) => state.categories
+  );
   const { data, isLoading } = useGetAllCategoryQuery();
+  const [deleteCategory] = useDeleteCategoryMutation();
   const { open, handleOpenModal, handleClose, handleAccept } = useModal();
   const categoryView = useModal();
+  const deleteConfirm = useModal();
   const dispatch = useAppDispatch();
   const [select, setSelect] = useState("");
 
@@ -80,7 +84,7 @@ export const CategoryPage = () => {
           </FormControl>
         </Box>
         {isLoading && <Typography>Cargando...</Typography>}
-        {categories && (
+        {categories && categories.length > 0 && (
           <CategoryList
             data={categories!}
             handleCategoryDelete={(category: Category) =>
@@ -101,6 +105,9 @@ export const CategoryPage = () => {
             }
           />
         )}
+        {categories && categories.length === 0 && (
+          <Typography>No hay categorias registradas</Typography>
+        )}
       </Container>
       <Modal
         open={open}
@@ -111,20 +118,33 @@ export const CategoryPage = () => {
         }}
         handleAccept={() =>
           handleAccept(() => {
-            dispatch({ type: "categories/deleteCategory" });
+            deleteCategory(selectedCategory!.id)
+              .unwrap()
+              .then(() => {
+                dispatch({ type: "categories/deleteCategory", payload: null });
+                deleteConfirm.handleOpenModal(() => {});
+              });
           })
         }
-        handleClose={() =>
-          handleClose(() =>
-            dispatch({ type: "categories/setSelectedCategory", payload: null })
-          )
-        }
+        handleClose={() => handleClose()}
       />
       <Modal
         open={categoryView.open}
         handleClose={() => categoryView.handleClose()}
-        data={{ title: "Ver categoria", component: <CategoryViewInfo category={ {...selectedCategory!}  } /> }}
+        data={{
+          title: "Ver categoria",
+          component: <CategoryViewInfo category={{ ...selectedCategory! }} />,
+        }}
         handleAccept={() => categoryView.handleClose()}
+      />
+      <Modal
+        open={deleteConfirm.open}
+        handleClose={() => deleteConfirm.handleClose()}
+        data={{
+          title: "Categoria eliminada",
+          content: "Se ha eliminado satisfactoriamente la categoria",
+        }}
+        handleAccept={() => deleteConfirm.handleClose()}
       />
     </>
   );
