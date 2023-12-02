@@ -19,6 +19,7 @@ import { useAppDispatch, useAppSelector } from "../store";
 import { Category } from "./interface";
 import { useModal } from "./hooks/useModal";
 import { CategoryViewInfo } from "./components/CategoryViewInfo";
+import { useNavigate } from "react-router-dom";
 
 export const CategoryPage = () => {
   const { categories, selectedCategory } = useAppSelector(
@@ -31,8 +32,11 @@ export const CategoryPage = () => {
   const deleteConfirm = useModal();
   const dispatch = useAppDispatch();
   const [select, setSelect] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
+    if (categories) return;
+
     if (data) {
       dispatch({ type: "categories/setCategories", payload: data });
     }
@@ -56,6 +60,7 @@ export const CategoryPage = () => {
             variant="contained"
             startIcon={<GroupAddIcon />}
             sx={{ padding: ".5rem 1.3rem" }}
+            onClick={() => navigate("/backoffice/categories/create")}
           >
             Registrar categoria
           </Button>
@@ -103,49 +108,77 @@ export const CategoryPage = () => {
                 })
               )
             }
+            handleCategoryEdit={(category: Category) => {
+              dispatch({
+                type: "categories/setSelectedCategory",
+                payload: category,
+              });
+              navigate(`/backoffice/categories/${category.id}/edit`);
+            }}
           />
         )}
         {categories && categories.length === 0 && (
           <Typography>No hay categorias registradas</Typography>
         )}
       </Container>
-      <Modal
-        open={open}
-        data={{
-          title: "Eliminar categoria",
-          content:
-            "¿Estas seguro que deseas eliminar la categoria seleccionada?",
-        }}
-        handleAccept={() =>
-          handleAccept(() => {
-            deleteCategory(selectedCategory!.id)
-              .unwrap()
-              .then(() => {
-                dispatch({ type: "categories/deleteCategory", payload: null });
-                deleteConfirm.handleOpenModal(() => {});
+
+      {/* modales */}
+      <>
+        <Modal
+          open={open}
+          data={{
+            title: "Eliminar categoria",
+            content:
+              "¿Estas seguro que deseas eliminar la categoria seleccionada?",
+          }}
+          handleAccept={() =>
+            handleAccept(() => {
+              deleteCategory(selectedCategory!.id!)
+                .unwrap()
+                .then(() => {
+                  dispatch({
+                    type: "categories/deleteCategory",
+                    payload: null,
+                  });
+                  deleteConfirm.handleOpenModal(() => {});
+                });
+            })
+          }
+          handleClose={() => handleClose()}
+        />
+        <Modal
+          open={categoryView.open}
+          handleClose={() =>
+            categoryView.handleClose(() => {
+              dispatch({
+                type: "categories/setSelectedCategory",
+                payload: null,
               });
-          })
-        }
-        handleClose={() => handleClose()}
-      />
-      <Modal
-        open={categoryView.open}
-        handleClose={() => categoryView.handleClose()}
-        data={{
-          title: "Ver categoria",
-          component: <CategoryViewInfo category={{ ...selectedCategory! }} />,
-        }}
-        handleAccept={() => categoryView.handleClose()}
-      />
-      <Modal
-        open={deleteConfirm.open}
-        handleClose={() => deleteConfirm.handleClose()}
-        data={{
-          title: "Categoria eliminada",
-          content: "Se ha eliminado satisfactoriamente la categoria",
-        }}
-        handleAccept={() => deleteConfirm.handleClose()}
-      />
+            })
+          }
+          data={{
+            title: "Ver categoria",
+            component: <CategoryViewInfo category={{ ...selectedCategory! }} />,
+          }}
+          handleAccept={() =>
+            categoryView.handleClose(() => {
+              dispatch({
+                type: "categories/setSelectedCategory",
+                payload: null,
+              });
+            })
+          }
+        />
+        <Modal
+          open={deleteConfirm.open}
+          handleClose={() => deleteConfirm.handleClose()}
+          data={{
+            title: "Categoria eliminada",
+            content: "Se ha eliminado satisfactoriamente la categoria",
+          }}
+          handleAccept={() => deleteConfirm.handleClose()}
+        />
+      </>
     </>
   );
 };
