@@ -6,12 +6,14 @@ import { clientsApi } from "../clients/services";
 import { clientsSlice } from "../clients/slice/clients";
 import { categoryApi } from "../categories/service";
 import { categorySlice } from "../categories/slice/categoriesSlice";
+import { reviewApi } from "../reviews/service/review";
 
 export const store = configureStore({
   reducer: {
     [loginApi.reducerPath]: loginApi.reducer,
     [clientsApi.reducerPath]: clientsApi.reducer,
     [categoryApi.reducerPath]: categoryApi.reducer,
+    [reviewApi.reducerPath]: reviewApi.reducer,
     authentication: authenticationSlice.reducer,
     clients: clientsSlice.reducer,
     categories:  categorySlice.reducer,
@@ -20,7 +22,8 @@ export const store = configureStore({
     getDefaultMiddleware()
       .concat(loginApi.middleware)
       .concat(clientsApi.middleware)
-      .concat(categoryApi.middleware),
+      .concat(categoryApi.middleware)
+      .concat(reviewApi.middleware),
 });
 
 setupListeners(store.dispatch);
