@@ -18,7 +18,7 @@ interface Props {
   showActions?: boolean;
   handleProductInfoView?: (product: Product) => void;
   handleProductEdit?: (product: Product) => void;
-  handleProductDelete?: (product: Product) => void;
+  handleProductDelete?: (product: Product) => () => void;
 }
 
 export default function BasicTable({
@@ -48,8 +48,8 @@ export default function BasicTable({
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              {Object.keys(data[0]).map((key) => (
-                <TableCell key={key} align="center">
+              {Object.keys(data[0]).map((key, index) => (
+                <TableCell key={key + index} align="center">
                   {key}
                 </TableCell>
               ))}
@@ -57,17 +57,17 @@ export default function BasicTable({
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.map((product) => (
+            {data.map((product, index) => (
               <TableRow
                 hover
-                key={product.amount + product.id}
+                key={product.amount + product.id + index + product.name}
                 sx={{
                   "&:last-child td, &:last-child th": { border: 0 },
                   cursor: "pointer",
                 }}
               >
                 <TableCell align="center">
-                  {product.profileImg ? "Img" : "No img"}
+                  {product.profileImg ? (<img src={product.profileImg} width={70} height={70} />) : "Sin imagen" }
                 </TableCell>
                 <TableCell align="center">{product.id}</TableCell>
                 <TableCell align="center">{product.name}</TableCell>
@@ -90,7 +90,7 @@ export default function BasicTable({
                     <IconButton onClick={() => handleProductEdit(product)}>
                       <EditIcon color="success" />
                     </IconButton>
-                    <IconButton onClick={() => handleProductDelete(product)}>
+                    <IconButton onClick={handleProductDelete(product)}>
                       <DeleteIcon color="error" />
                     </IconButton>
                   </TableCell>
