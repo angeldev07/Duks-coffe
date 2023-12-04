@@ -15,6 +15,7 @@ export const ClientsPage = () => {
     handleCancelDeleteClient,
     handleDeleteClient,
     handleEditClient,
+    handleAddClient
   } = useClients();
 
   return (
@@ -25,12 +26,14 @@ export const ClientsPage = () => {
           display="flex"
           alignItems="center"
           justifyContent="space-between"
+          
         >
           <Typography variant="h4">Clientes</Typography>
           <Button
             variant="contained"
             startIcon={<GroupAddIcon />}
             sx={{ padding: ".5rem 1.3rem" }}
+            onClick={handleAddClient}
           >
             Registrar cliente
           </Button>
@@ -63,6 +66,7 @@ export const ClientsPage = () => {
               hanldeClientInfoView={handleClientInfoView}
               handleClientDelete={handleOpenModalDeteClientConfirm}
               handleClientEdit={handleEditClient}
+              
             />
           )}
           {clients && clients.length === 0 && (

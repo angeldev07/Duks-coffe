@@ -9,8 +9,8 @@ export const ClientsRoutes = () => {
     <Routes>
         <Route path="/" element={<ClientsPage />}/>
         <Route path="/:id" element={<ClientInfoPage />}/>
-        <Route path="/:id/edit" element={<EditClientPage />}/>
-        <Route path="/create" element={<h1>Pagina para crear un cliente</h1>}/>
+        <Route path="/:id/edit" element={<EditClientPage isEditing={true}/>}/>
+        <Route path="/create" element={<EditClientPage isEditing={false} />}/>
         <Route path="*" element={<ClientsPage />}/>
     </Routes>
   );

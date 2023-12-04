@@ -36,6 +36,11 @@ export const useClients = () => {
       navigate(`/backoffice/clients/${client.id}/edit`);
     }
 
+    const handleAddClient = (client: Client) => {
+      dispatch(setSelectedClient(client));
+      navigate(`/backoffice/clients/create`);
+    }
+
     const handleDeleteClient = () => {
       dispatch(deleteClient());
       deleteMutation(selectedClient?.id).unwrap().then((res) => {
@@ -76,7 +81,8 @@ export const useClients = () => {
         handleOpenModalDeteClientConfirm,
         handleDeleteClient,
         handleCancelDeleteClient,
-        handleEditClient
+        handleEditClient,
+        handleAddClient
     }
 
 }
