@@ -72,12 +72,13 @@ export const useProductForm = () => {
   
       getBase64(e.currentTarget["profileImg"].files[0]).then((res) => {
         product.profileImg = `${res!}`;
+        addProduct(product).unwrap().then((res: Product) => {
+          dispatch(addNewProduct(product));
+          navigate('/backoffice/products');
+        })
       })
 
-      addProduct(product).unwrap().then((res: Product) => {
-        dispatch(addNewProduct(product));
-        navigate('/backoffice/products');
-      })
+
       
     };
 
